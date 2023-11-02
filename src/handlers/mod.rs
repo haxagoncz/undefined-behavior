@@ -25,7 +25,7 @@ pub(crate) struct AppInfo {
 
 pub(crate) async fn config() -> Json<AppInfo> {
     Json(AppInfo {
-        repository: String::from("https://github.com/haxagoncz/the_server_shouldnt_do_that"),
+        repository: String::from("https://github.com/haxagoncz/undefined-behavior"),
         sha: String::from(env!("GIT_HASH")),
         version: String::from("1.0.0"),
     })

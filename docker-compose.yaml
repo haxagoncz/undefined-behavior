@@ -13,7 +13,7 @@ services:
       - challenge_network
   backend:
     build: ./
-    image: ghcr.io/haxagoncz/the_server_shouldnt_do_that
+    image: ghcr.io/haxagoncz/undefined-behavior-backend:latest
     networks:
       - challenge_network
     expose:

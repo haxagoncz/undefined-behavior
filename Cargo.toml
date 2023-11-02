@@ -2,7 +2,7 @@
 members = [".", "./migration", "./entity"]
 
 [package]
-name = "the_server_shouldnt_do_that"
+name = "undefined-behavior"
 version = "0.1.0"
 edition = "2021"
 

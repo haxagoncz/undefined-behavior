@@ -1,7 +1,7 @@
 FROM rust:alpine as builder
 RUN apk add --no-cache upx mold clang16 musl-dev git
 
-ARG project=the_server_shouldnt_do_that
+ARG project=undefined-behavior
 
 WORKDIR /build
 
@@ -12,7 +12,7 @@ RUN cargo build --release -p "$project" && \
 
 FROM alpine
 
-ARG project=the_server_shouldnt_do_that
+ARG project=undefined-behavior
 
 RUN addgroup -S app && adduser -S app -G app
 
