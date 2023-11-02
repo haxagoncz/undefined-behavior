@@ -7,5 +7,20 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: database
-    ports:
-      - 5432:5432
+    expose:
+      - 5432
+    networks:
+      - challenge_network
+  backend:
+    build: ./
+    image: ghcr.io/haxagoncz/the_server_shouldnt_do_that
+    networks:
+      - challenge_network
+    expose:
+      - 3000
+    environment:
+      HAXAGON_DATABASE: postgres://postgres:postgres@postgres/database
+
+networks:
+  challenge_network:
+    driver: bridge

@@ -4,8 +4,10 @@ use axum::{
 };
 use migration::{Migrator, MigratorTrait};
 use sea_orm::{prelude::*, Database};
+use std::env;
 use tracing::info;
 
+mod errors;
 mod handlers;
 
 #[derive(Clone)]
@@ -19,10 +21,12 @@ async fn main() {
 
     info!("Connecting to database!");
 
-    let db: DatabaseConnection =
-        Database::connect("postgres://postgres:postgres@127.0.0.1/database")
-            .await
-            .expect("There was an error while connecting to the database");
+    let db: DatabaseConnection = Database::connect(
+        env::var("HAXAGON_DATABASE_URL")
+            .expect("Missing HAXAGON_DATABASE_URL environment variable"),
+    )
+    .await
+    .expect("There was an error while connecting to the database");
 
     Migrator::up(&db, None)
         .await
@@ -38,9 +42,10 @@ async fn main() {
         .fallback(handlers::not_found)
         .with_state(state);
 
-    info!("Listening on 0.0.0.0:3000!");
+    let bind = env::var("HAXAGON_BIND").unwrap_or("0.0.0.0:3000".into());
+    info!("Listening on {bind}!");
 
-    axum::Server::bind(&"0.0.0.0:3000".parse().unwrap())
+    axum::Server::bind(&bind.parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();

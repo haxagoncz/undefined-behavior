@@ -4,10 +4,10 @@ use sea_orm::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::env;
 
-use crate::AppState;
+use crate::{errors::CustomError, AppState};
 
-pub(crate) async fn not_found() -> &'static str {
-    "Not found"
+pub(crate) async fn not_found() -> CustomError {
+    CustomError::NotFound
 }
 
 pub(crate) async fn index() -> &'static str {
@@ -36,23 +36,21 @@ pub(crate) struct LoginGetData {
     email: String,
 }
 
-#[derive(Debug, Serialize)]
-pub(crate) struct LoginGetResponse {
-    user: Option<user::Model>,
-}
-
 /// In case you forget your password
 pub(crate) async fn login_get(
     state: State<AppState>,
     login: Json<LoginGetData>,
-) -> Json<LoginGetResponse> {
+) -> Result<Json<user::Model>, CustomError> {
     let user = user::Entity::find()
         .filter(user::Column::Email.eq(login.email.clone()))
         .one(&state.db)
-        .await
-        .expect("There was an error");
+        .await?;
 
-    Json(LoginGetResponse { user })
+    if let Some(user) = user {
+        Ok(Json(user))
+    } else {
+        Err(CustomError::UserNotFound)
+    }
 }
 
 #[derive(Deserialize)]
@@ -62,18 +60,20 @@ pub(crate) struct LoginData {
 }
 
 /// Sign in into the admin page
-pub(crate) async fn login_post(state: State<AppState>, login: Json<LoginData>) -> String {
+pub(crate) async fn login_post(
+    state: State<AppState>,
+    login: Json<LoginData>,
+) -> Result<String, CustomError> {
     let user = user::Entity::find()
         .filter(user::Column::Email.eq(login.email.clone()))
         // TODO: a friend told me hash_function is safer
         .filter(user::Column::Password.eq(login.password.clone()))
         .one(&state.db)
-        .await
-        .expect("There was an error");
+        .await?;
 
     if user.is_some() {
-        env::var("HAXAGON_FLAG").unwrap_or("haxagon{this_is_the_flag}".into())
+        Ok(env::var("HAXAGON_FLAG").unwrap_or("haxagon{this_is_the_flag}".into()))
     } else {
-        "Unauthorized".into()
+        Err(CustomError::Unauthorized)
     }
 }
