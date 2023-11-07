@@ -13,7 +13,7 @@ jobs:
       contents: read
     strategy:
       matrix:
-        image: [backend]
+        image: [backend, frontend]
 
     steps:
       - uses: actions/checkout@v2
