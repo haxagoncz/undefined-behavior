@@ -12,7 +12,9 @@ services:
     networks:
       - challenge_network
   backend:
-    build: ./
+    build:
+      dockerfile: ./backend/Dockerfile
+      context: .
     image: ghcr.io/haxagoncz/undefined-behavior-backend:latest
     depends_on:
      - postgres
@@ -27,6 +29,18 @@ services:
     environment:
       RUST_LOG: debug
       HAXAGON_DATABASE_URL: postgres://postgres:postgres@postgres/database
+  frontend:
+    build:
+      dockerfile: ./frontend/Dockerfile
+      context: .
+    image: ghcr.io/haxagoncz/undefined-behavior-frontend:latest
+    ports:
+      - 80:80
+    networks:
+      - challenge_network
+    depends_on:
+      - postgres
+      - backend
 
 networks:
   challenge_network:

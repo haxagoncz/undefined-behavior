@@ -27,7 +27,7 @@ pub(crate) async fn config() -> Json<AppInfo> {
     Json(AppInfo {
         repository: String::from("https://github.com/haxagoncz/undefined-behavior"),
         sha: String::from(env!("GIT_HASH")),
-        version: String::from("1.0.0"),
+        version: String::from(env!("CARGO_PKG_VERSION")),
     })
 }
 

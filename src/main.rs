@@ -35,7 +35,7 @@ async fn main() {
     let state = AppState { db };
 
     let app = Router::new()
-        .route("/api", get(handlers::index))
+        .route("/api/", get(handlers::index))
         .route("/api/config", get(handlers::config))
         .route("/api/login", get(handlers::login_get))
         .route("/api/login", post(handlers::login_post))
