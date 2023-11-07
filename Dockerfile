@@ -18,7 +18,8 @@ RUN addgroup -S app && adduser -S app -G app
 
 COPY --from=builder /build/target/release/"$project" /bin/app
 RUN chmod 555 /bin/app
+COPY docker/entrypoint.sh /entrypoint.sh
 
 USER app:app
 
-ENTRYPOINT [ "app" ]
+ENTRYPOINT [ "/entrypoint.sh" ]

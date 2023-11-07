@@ -44,6 +44,7 @@ async fn main() {
 
     let bind = env::var("HAXAGON_BIND").unwrap_or("0.0.0.0:3000".into());
     info!("Listening on {bind}!");
+    println!("SCENARIO_IS_READY");
 
     axum::Server::bind(&bind.parse().unwrap())
         .serve(app.into_make_service())

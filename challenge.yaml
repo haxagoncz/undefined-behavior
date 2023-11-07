@@ -1,0 +1,17 @@
+title: Undefined behavior
+
+shortDescription: Try to find a funny backdoor in a cat cafe website.
+
+access:
+  - type: http
+    port: 80
+    path: /
+
+flags:
+  - type: 1
+    identifier: get_it
+    maximumTries: 3
+    points: 10
+    placeholder: flag
+
+    name: Get it?

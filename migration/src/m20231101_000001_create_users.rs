@@ -1,3 +1,5 @@
+use std::env;
+
 use ::entity::user;
 use sea_orm_migration::{
     prelude::*,
@@ -37,7 +39,7 @@ impl MigrationTrait for Migration {
 
         user::ActiveModel {
             email: Set("admin@myapp.io".into()),
-            password: Set("mamjenjednuponozku".into()),
+            password: Set(env::var("HOSTNAME").unwrap()),
             ..Default::default()
         }
         .insert(db)
