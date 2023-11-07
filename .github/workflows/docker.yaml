@@ -11,6 +11,9 @@ jobs:
     permissions:
       packages: write
       contents: read
+    strategy:
+      matrix:
+        image: [backend]
 
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +31,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ghcr.io/${{ github.repository }}-backend
+            ghcr.io/${{ github.repository }}-${{ matrix.image }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=edge
@@ -37,6 +40,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          dockerfile: ./${{ matrix.image }}/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
