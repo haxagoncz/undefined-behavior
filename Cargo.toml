@@ -23,3 +23,4 @@ migration = { path = "./migration" }
 entity = { path = "./entity" }
 thiserror = "1.0.50"
 serde_json = "1.0.108"
+axum-media = { version = "0.1.1", features = ["urlencoded"] }

@@ -1,5 +1,6 @@
 use ::entity::user;
-use axum::{extract::State, Json};
+use axum::{extract::State, http::HeaderMap};
+use axum_media::{AnyMedia, AnyMediaIntoResponse};
 use sea_orm::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -23,12 +24,18 @@ pub(crate) struct AppInfo {
     version: String,
 }
 
-pub(crate) async fn config() -> Json<AppInfo> {
-    Json(AppInfo {
+pub(crate) async fn config(headers: HeaderMap) -> AnyMediaIntoResponse<AppInfo> {
+    AnyMedia(AppInfo {
         repository: String::from("https://github.com/haxagoncz/undefined-behavior"),
         sha: String::from(env!("GIT_HASH")),
         version: String::from(env!("CARGO_PKG_VERSION")),
     })
+    .with_mime_str(
+        headers
+            .get("accept")
+            .map(|s| s.to_str().unwrap_or(""))
+            .unwrap_or(""),
+    )
 }
 
 #[derive(Deserialize)]
@@ -38,16 +45,22 @@ pub(crate) struct LoginGetData {
 
 /// In case you forget your password
 pub(crate) async fn login_get(
+    headers: HeaderMap,
     state: State<AppState>,
-    login: Json<LoginGetData>,
-) -> Result<Json<user::Model>, CustomError> {
+    AnyMedia(login): AnyMedia<LoginGetData>,
+) -> Result<AnyMediaIntoResponse<user::Model>, CustomError> {
     let user = user::Entity::find()
         .filter(user::Column::Email.eq(login.email.clone()))
         .one(&state.db)
         .await?;
 
     if let Some(user) = user {
-        Ok(Json(user))
+        Ok(AnyMedia(user).with_mime_str(
+            headers
+                .get("accept")
+                .map(|s| s.to_str().unwrap_or(""))
+                .unwrap_or(""),
+        ))
     } else {
         Err(CustomError::UserNotFound)
     }
@@ -62,7 +75,7 @@ pub(crate) struct LoginData {
 /// Sign in into the admin page
 pub(crate) async fn login_post(
     state: State<AppState>,
-    login: Json<LoginData>,
+    AnyMedia(login): AnyMedia<LoginData>,
 ) -> Result<String, CustomError> {
     let user = user::Entity::find()
         .filter(user::Column::Email.eq(login.email.clone()))
