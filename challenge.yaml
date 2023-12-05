@@ -1,6 +1,7 @@
 title: Undefined behavior
 
 shortDescription: Try to find a funny backdoor in a cat cafe website.
+description: DESCRIPTION.md
 
 access:
   - type: http
