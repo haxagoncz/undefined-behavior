@@ -3,6 +3,9 @@ title: Undefined behavior
 shortDescription: Try to find a funny backdoor in a cat cafe website.
 description: DESCRIPTION.md
 
+tags:
+  - web
+
 access:
   - type: http
     port: 80
@@ -12,7 +15,7 @@ flags:
   - type: 1
     identifier: get_it
     maximumTries: 3
-    points: 10
+    points: 30
     placeholder: flag
 
     name: Get it?
