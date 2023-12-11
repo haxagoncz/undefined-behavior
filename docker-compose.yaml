@@ -22,8 +22,6 @@ services:
       - challenge_network
     expose:
       - 3000
-    ports:
-      - 3000:3000
     volumes:
       - ./docker/flags:/var/flags:ro
     environment:
