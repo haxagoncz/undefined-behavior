@@ -3,6 +3,7 @@ title: Undefined behavior
 shortDescription: Try to find a funny backdoor in a cat cafe website.
 description: DESCRIPTION.md
 author: 63232d1fbf42762c2f4f5483
+image: https://static.haxagon.xyz/challenge-images/undefined-behaviour.webp
 
 tags:
   - web
