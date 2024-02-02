@@ -4,6 +4,7 @@ shortDescription: Try to find a funny backdoor in a cat cafe website.
 description: DESCRIPTION.md
 author: 63232d1fbf42762c2f4f5483
 image: https://static.haxagon.xyz/challenge-images/undefined-behaviour.webp
+difficulty: average
 
 tags:
   - web
@@ -17,7 +18,7 @@ flags:
   - type: 1
     identifier: get_it
     maximumTries: 3
-    points: 30
+    points: 10
     placeholder: flag
 
     name: Get it?
